@@ -1,4 +1,5 @@
 ﻿using Modbus418.MockDevices;
+using Modbus418.Modbus;
 
 namespace Modbus418
 {
@@ -8,6 +9,7 @@ namespace Modbus418
         {
             using var kettleMock = new KettleMock();
             kettleMock.StartDevice();
+            var kettleModbus = new KettleModbus();
 
             while (true)
             {
@@ -29,7 +31,8 @@ namespace Modbus418
                         return;
 
                     case 1:
-                        await kettleMock.ProcessModbusCommand();
+                        var onOffData = kettleModbus.CreateOnOffCommand();
+                        await kettleMock.ProcessModbusCommand(onOffData);
                         break;
                     default:
                         Console.WriteLine("Неизвестная команда");

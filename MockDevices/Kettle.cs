@@ -79,12 +79,33 @@ namespace Modbus418.MockDevices
                 }
             }
         }
-        // Пока что только вкл/выкл, но название(!) само за себя говорит!
-        public async Task ProcessModbusCommand()
+        public async Task ProcessModbusCommand(byte[] tcpData)
         {
             await Task.Run(() =>
             {
-                OnOff();
+                if (tcpData.Length < 12)
+                {
+                    Console.WriteLine("");
+                    return;
+                }
+
+                byte unitId = tcpData[6];
+                byte functionCode = tcpData[7];
+                ushort registerAddress = (ushort)((tcpData[8] << 8) | tcpData[9]);
+                ushort value = (ushort)((tcpData[10] << 8) | tcpData[11]);
+
+                Console.WriteLine($"Получена команда: [Unit ID: {unitId}, Код функции: {functionCode:X2}, Регистр: {registerAddress:X4}, Значение: {value:X4}]");
+
+                switch (functionCode)
+                {
+                    case 0x05:
+                        OnOff();
+                        break;
+                    default:
+                        Console.WriteLine($"Код функции: {functionCode} не поддерживается");
+                        break;
+                }
+                
             });
             
         }
