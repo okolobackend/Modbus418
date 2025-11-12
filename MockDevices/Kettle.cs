@@ -4,15 +4,10 @@ using System.Threading.Tasks;
 
 namespace Modbus418.MockDevices
 {
-    public class KettleMock : IDisposable
+    public class KettleMock : BaseDevice
     {
-        private readonly Random _random = new Random();
-        private readonly object _lock = new object();
-        private bool _isOn = false;
-        private bool _isDisposed = false;
         private int _currentTemperature;
         private int _maxHeatingTemperature = 100;
-        private CancellationTokenSource? _cts;
         private const int MIN_TEMPERATURE = 20;
         private const int MAX_TEMPERATURE = 100;
         private const int HEATING_RATE = 1;
@@ -29,7 +24,7 @@ namespace Modbus418.MockDevices
             get { lock (_lock) return _isOn; }
         }
 
-        public void Start()
+        public override void StartDevice()
         {
             _currentTemperature = _random.Next(20, 90);
             _cts = new CancellationTokenSource();
@@ -89,31 +84,9 @@ namespace Modbus418.MockDevices
         {
             await Task.Run(() =>
             {
-                lock (_lock)
-                {
-                    if (!_isOn)
-                    {
-                        _isOn = true;
-                        Console.WriteLine("Чайник включен");
-                    }
-                    else
-                    {
-                        _isOn = false;
-                        Console.WriteLine("Чайник выключен");
-                    }
-                }
+                OnOff();
             });
             
-        }
-        public void Dispose()
-        {
-            if (!_isDisposed)
-            {
-                _cts?.Cancel();
-                _cts?.Dispose();
-                Console.WriteLine("Чайник не в сети");
-                _isDisposed = true;
-            }
         }
     }
 }

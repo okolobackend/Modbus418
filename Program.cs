@@ -7,7 +7,7 @@ namespace Modbus418
         static async Task Main()
         {
             using var kettleMock = new KettleMock();
-            kettleMock.Start();
+            kettleMock.StartDevice();
 
             while (true)
             {
