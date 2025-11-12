@@ -1,0 +1,14 @@
+/home/golubev/projects/C#/Modbus418/bin/Debug/net8.0/Modbus418
+/home/golubev/projects/C#/Modbus418/bin/Debug/net8.0/Modbus418.deps.json
+/home/golubev/projects/C#/Modbus418/bin/Debug/net8.0/Modbus418.runtimeconfig.json
+/home/golubev/projects/C#/Modbus418/bin/Debug/net8.0/Modbus418.dll
+/home/golubev/projects/C#/Modbus418/bin/Debug/net8.0/Modbus418.pdb
+/home/golubev/projects/C#/Modbus418/obj/Debug/net8.0/Modbus418.GeneratedMSBuildEditorConfig.editorconfig
+/home/golubev/projects/C#/Modbus418/obj/Debug/net8.0/Modbus418.AssemblyInfoInputs.cache
+/home/golubev/projects/C#/Modbus418/obj/Debug/net8.0/Modbus418.AssemblyInfo.cs
+/home/golubev/projects/C#/Modbus418/obj/Debug/net8.0/Modbus418.csproj.CoreCompileInputs.cache
+/home/golubev/projects/C#/Modbus418/obj/Debug/net8.0/Modbus418.dll
+/home/golubev/projects/C#/Modbus418/obj/Debug/net8.0/refint/Modbus418.dll
+/home/golubev/projects/C#/Modbus418/obj/Debug/net8.0/Modbus418.pdb
+/home/golubev/projects/C#/Modbus418/obj/Debug/net8.0/Modbus418.genruntimeconfig.cache
+/home/golubev/projects/C#/Modbus418/obj/Debug/net8.0/ref/Modbus418.dll
