@@ -36,6 +36,18 @@ namespace Modbus418
                         var onOffData = kettleModbus.CreateOnOffCommand();
                         await kettleMock.ProcessModbusCommand(onOffData);
                         break;
+                    case 2:
+                        Console.Write("Введите значение температуры нагрева от 20 до 100: ");
+                        if (ushort.TryParse(Console.ReadLine(), out ushort maxTemp) && maxTemp >= 20 && maxTemp <= 100)
+                        {
+                            var tempData = kettleModbus.SetTemperatureCommand(maxTemp);
+                            await kettleMock.ProcessModbusCommand(tempData);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Ошибка ввода.");
+                        }
+                        break;
                     default:
                         Console.WriteLine("Неизвестная команда");
                         break;

@@ -4,9 +4,11 @@ namespace Modbus418.Modbus
 {
     public class KettleModbus : BaseModbusDevice
     {
-        // Адрес памяти, катушки, код функции что способны включать устройство
+        // Адрес памяти, катушки, код функции что способны включать устройство и изменять температуру
         public const ushort COIL_ON_OFF = 0x0001;
+        public const ushort REGISTER_TEMPERATURE = 0x0000;
         public const byte FUNCTION_WRITE_SINGLE_COIL = 0x05;
+        public const byte FUNCTION_WRITE_SINGLE_REGISTER = 0x06;
 
         public KettleModbus(IModbusProtocol protocol) : base(protocol)
         {
@@ -40,5 +42,18 @@ namespace Modbus418.Modbus
 
             return _protocol.CreateRequestToDevice(pdu, DEVICE_ADDRESS);
         }
-    }
+        
+        public byte[] SetTemperatureCommand(ushort maxTemp)
+        {
+            var pdu = new byte[]
+            {
+                FUNCTION_WRITE_SINGLE_REGISTER,
+                (byte)(REGISTER_TEMPERATURE >> 8),
+                (byte)(REGISTER_TEMPERATURE & 0xFF),
+                (byte)(maxTemp >> 8),
+                (byte)(maxTemp & 0xFF)
+            };
+            return _protocol.CreateRequestToDevice(pdu, DEVICE_ADDRESS);
+        } 
+}
 }

@@ -101,6 +101,14 @@ namespace Modbus418.MockDevices
                     case 0x05:
                         OnOff();
                         break;
+                    case 0x06:
+                        lock (_lock)
+                        {
+                            int maxTemp = Math.Clamp((int)value, MIN_TEMPERATURE, MAX_TEMPERATURE);
+                            _maxHeatingTemperature = maxTemp;
+                            Console.WriteLine($"Установлена температура нагрева: {_maxHeatingTemperature}");
+                        }
+                        break;
                     default:
                         Console.WriteLine($"Код функции: {functionCode} не поддерживается");
                         break;
