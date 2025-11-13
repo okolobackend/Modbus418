@@ -7,15 +7,17 @@ namespace Modbus418
     {
         static async Task Main()
         {
+
+            var usingProtocol = new ModbusTCP();
             using var kettleMock = new KettleMock();
             kettleMock.StartDevice();
-            var kettleModbus = new KettleModbus();
+            var kettleModbus = new KettleModbus(usingProtocol);
 
             while (true)
             {
                 Console.WriteLine("Выберите команду для чайника:");
                 Console.WriteLine("0 - Выйти из программы");
-                Console.WriteLine("1 - Включить чайник");
+                Console.WriteLine(kettleModbus.GetCommandsList());
                 Console.Write("Номер команды: ");
 
                 if (!ushort.TryParse(Console.ReadLine(), out ushort commandId))

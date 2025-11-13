@@ -2,7 +2,7 @@ using Modbus418.Interfaces;
 
 namespace Modbus418.MockDevices
 {
-    public abstract class BaseDevice : IMockDevice
+    public abstract class BaseMock : IMockDevice
     {
         protected readonly Random _random = new Random();
         protected readonly object _lock = new object();

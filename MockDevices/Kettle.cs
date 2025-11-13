@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Modbus418.MockDevices
 {
-    public class KettleMock : BaseDevice
+    public class KettleMock : BaseMock
     {
         private int _currentTemperature;
         private int _maxHeatingTemperature = 100;
