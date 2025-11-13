@@ -2,26 +2,22 @@ using Modbus418.Interfaces;
 
 namespace Modbus418.Modbus
 {
-    public class KettleModbus : BaseModbusDevice
+    public class HumidifierModbus : BaseModbusDevice
     {
-        public new const byte DEVICE_ADDRESS = 0x01;
+        public new const byte DEVICE_ADDRESS = 0x02;
         // Адрес памяти, катушки, код функции что способны включать устройство и изменять температуру
         public const ushort COIL_ON_OFF = 0x0001;
         public const ushort REGISTER_TEMPERATURE = 0x0000;
         public const byte FUNCTION_WRITE_SINGLE_COIL = 0x05;
         public const byte FUNCTION_WRITE_SINGLE_REGISTER = 0x06;
 
-        public KettleModbus(IModbusProtocol protocol) : base(protocol)
+        public HumidifierModbus(IModbusProtocol protocol) : base(protocol)
         {
         }
 
-        public override IReadOnlyDictionary<ushort, string> AvailableCommands => DeviceCommands.Kettle.Commands;
+        public override IReadOnlyDictionary<ushort, string> AvailableCommands => DeviceCommands.Humidifier.Commands;
         public override byte[] CreateOnOffCommand()
         {
-            // Чтобы в центре управления не уточнять включить или выключить чайник, 
-            // нам придется запоминать состояние устройства, 
-            // что конечно же печалит. 
-            // В общем, здесь нужно поправить
             ushort value = (!_isOn) ? (ushort)0xFF00 : (ushort)0x0000;
             if (value == (ushort)0xFF00)
             {
@@ -44,15 +40,15 @@ namespace Modbus418.Modbus
             return _protocol.CreateRequestToDevice(pdu, DEVICE_ADDRESS);
         }
         
-        public byte[] SetTemperatureCommand(ushort maxTemp)
+        public byte[] SetHumidityCommand(ushort targetHumidity)
         {
             var pdu = new byte[]
             {
                 FUNCTION_WRITE_SINGLE_REGISTER,
                 (byte)(REGISTER_TEMPERATURE >> 8),
                 (byte)(REGISTER_TEMPERATURE & 0xFF),
-                (byte)(maxTemp >> 8),
-                (byte)(maxTemp & 0xFF)
+                (byte)(targetHumidity >> 8),
+                (byte)(targetHumidity & 0xFF)
             };
             return _protocol.CreateRequestToDevice(pdu, DEVICE_ADDRESS);
         } 

@@ -11,10 +11,16 @@ namespace Modbus418
             var usingProtocol = new ModbusTCP();
             using var kettleMock = new KettleMock();
             kettleMock.StartDevice();
+            // Вот тутава больше всего начинается от добавления устройств 
+            // до переписывания пульта управления
+            using var humidifierMock = new HumidifierMock();
+            humidifierMock.StartDevice();
+
             var kettleModbus = new KettleModbus(usingProtocol);
 
             while (true)
             {
+                // Вау! Я прям вижу страшный код
                 Console.WriteLine("Выберите команду для чайника:");
                 Console.WriteLine("0 - Выйти из программы");
                 Console.WriteLine(kettleModbus.GetCommandsList());

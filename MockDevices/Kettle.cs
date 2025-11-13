@@ -19,9 +19,9 @@ namespace Modbus418.MockDevices
         {
             get { lock (_lock) return _currentTemperature; }
         }
-        public bool IsOn
+        public int MaxHeatingTemperature
         {
-            get { lock (_lock) return _isOn; }
+            get { lock (_lock) return _maxHeatingTemperature; }
         }
 
         public override void StartDevice()
@@ -32,7 +32,7 @@ namespace Modbus418.MockDevices
             Task.Run(async () => await TemperatureUpdateLoop(_cts.Token));
 
             Console.WriteLine("Чайник подключен к сети");
-            Console.WriteLine($"Температура воды в чайнике: {_currentTemperature}");
+            Console.WriteLine($"Температура воды в чайнике: {CurrentTemperature}");
         }
 
         private async Task TemperatureUpdateLoop(CancellationToken token)
@@ -43,32 +43,32 @@ namespace Modbus418.MockDevices
                 lock (_lock)
                 {
                     // Нагрев чайника и автоматическое отключение по достижению максимальной температуры
-                    if (_isOn && _currentTemperature < _maxHeatingTemperature)
+                    if (IsOn && CurrentTemperature < MaxHeatingTemperature)
                     {
-                        _currentTemperature = Math.Min(_currentTemperature + HEATING_RATE, _maxHeatingTemperature);
-                        if (_currentTemperature == _maxHeatingTemperature)
+                        _currentTemperature = Math.Min(CurrentTemperature + HEATING_RATE, MaxHeatingTemperature);
+                        if (CurrentTemperature == MaxHeatingTemperature)
                         {
                             _isOn = false;
                             Console.WriteLine("Чайник вскипел");
                         }
-                        else if (_currentTemperature > _maxHeatingTemperature)
+                        else if (CurrentTemperature > MaxHeatingTemperature)
                         {
                             _isOn = false;
-                            Console.WriteLine($"Температура воды {_currentTemperature} превысила максимальное значение {_maxHeatingTemperature}");
+                            Console.WriteLine($"Температура воды {CurrentTemperature} превысила максимальное значение {MaxHeatingTemperature}");
                         }
                     }
                     // Остывание до комнатной температуры
-                    else if (!_isOn && _currentTemperature > MIN_TEMPERATURE)
+                    else if (!IsOn && CurrentTemperature > MIN_TEMPERATURE)
                     {
-                        _currentTemperature = Math.Max(_currentTemperature - COOLING_RATE, MIN_TEMPERATURE);
-                        if (_currentTemperature % 5 == 0)
+                        _currentTemperature = Math.Max(CurrentTemperature - COOLING_RATE, MIN_TEMPERATURE);
+                        if (CurrentTemperature % 5 == 0)
                         {
-                            Console.WriteLine($"Вода остыла до {_currentTemperature}");
+                            Console.WriteLine($"Вода остыла до {CurrentTemperature}");
                         }
                     }
                 }
                 // Увеличиваем температуру раз в секунду, охлаждаемся раз в три
-                int updateInterval = _isOn ? HEATING_INTERVAL : COOLING_INTERVAL;
+                int updateInterval = IsOn ? HEATING_INTERVAL : COOLING_INTERVAL;
                 try
                 {
                     await Task.Delay(updateInterval, token);
@@ -79,7 +79,7 @@ namespace Modbus418.MockDevices
                 }
             }
         }
-        public async Task ProcessModbusCommand(byte[] tcpData)
+        public override async Task ProcessModbusCommand(byte[] tcpData)
         {
             await Task.Run(() =>
             {
@@ -106,7 +106,7 @@ namespace Modbus418.MockDevices
                         {
                             int maxTemp = Math.Clamp((int)value, MIN_TEMPERATURE, MAX_TEMPERATURE);
                             _maxHeatingTemperature = maxTemp;
-                            Console.WriteLine($"Установлена температура нагрева: {_maxHeatingTemperature}");
+                            Console.WriteLine($"Установлена температура нагрева: {MaxHeatingTemperature}");
                         }
                         break;
                     default:

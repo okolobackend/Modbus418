@@ -9,6 +9,10 @@ namespace Modbus418.MockDevices
         protected bool _isOn = false;
         protected bool _isDisposed = false;
         protected CancellationTokenSource? _cts;
+        public bool IsOn
+        {
+            get { lock (_lock) return _isOn; }
+        }
         public abstract void StartDevice();
         public void OnOff()
         {
@@ -27,6 +31,7 @@ namespace Modbus418.MockDevices
                 }
         }
         
+        public abstract Task ProcessModbusCommand(byte[] tcpData);
         public void Dispose()
         {
             if (!_isDisposed)

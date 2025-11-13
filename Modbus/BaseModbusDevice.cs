@@ -6,7 +6,7 @@ namespace Modbus418.Modbus
     {
         protected bool _isOn = false;
         // Адрес устройства в сети
-        public const byte DEVICE_ADDRESS = 0x01;
+        public byte DEVICE_ADDRESS;
 
         // Для дальнейших разных кодировок нужна зависимость
         protected readonly IModbusProtocol _protocol;
